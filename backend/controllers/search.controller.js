@@ -6,15 +6,15 @@ export const searchActor = async (req, res) => {
     const data = await fetchFromTMDB(
       `https://api.themoviedb.org/3/search/person?query=${query}&include_adult=false&language=en-US&page=1`
     );
-    if (res.results.length === 0) {
+    if (data.results.length === 0) {
       return res.status(400).send(null);
     }
     await User.findByIdAndUpdate(req.user._id, {
       $push: {
         searchHistory: {
-          id: response.results[0].id,
-          image: response.results[0].profile_path,
-          title: response.results[0].name,
+          id: data.results[0].id,
+          image: data.results[0].profile_path,
+          title: data.results[0].name,
           searchType: "person",
           createdAt: new Date(),
         },
@@ -33,15 +33,15 @@ export const searchMovie = async (req, res) => {
     const data = await fetchFromTMDB(
       `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=1`
     );
-    if (res.results.length === 0) {
+    if (data.results.length === 0) {
       return res.status(400).send(null);
     }
     await User.findByIdAndUpdate(req.user._id, {
       $push: {
         searchHistory: {
-          id: response.results[0].id,
-          image: response.results[0].poster_path,
-          title: response.results[0].title,
+          id: data.results[0].id,
+          image: data.results[0].poster_path,
+          title: data.results[0].title,
           searchType: "movie",
           createdAt: new Date(),
         },
@@ -60,15 +60,15 @@ export const searchTVShow = async (req, res) => {
     const data = await fetchFromTMDB(
       `https://api.themoviedb.org/3/search/tv?query=${query}&include_adult=false&language=en-US&page=1`
     );
-    if (res.results.length === 0) {
+    if (data.results.length === 0) {
       return res.status(400).send(null);
     }
     await User.findByIdAndUpdate(req.user._id, {
       $push: {
         searchHistory: {
-          id: response.results[0].id,
-          image: response.results[0].poster_path,
-          title: response.results[0].name,
+          id: data.results[0].id,
+          image: data.results[0].poster_path,
+          title: data.results[0].name,
           searchType: "tv",
           createdAt: new Date(),
         },
@@ -83,5 +83,28 @@ export const searchTVShow = async (req, res) => {
 
 export const getSearchHistory = async (req, res) => {
   try {
-  } catch (error) {}
+    const data = req.user.searchHistory
+    res.status(200).json({ message: "success", content: data })
+  } catch (error) {
+    console.log("Error from getSearchHistory", error.message);
+    res.status(500).json({ message: "Error server" });
+  }
 };
+
+export const removeItemFromSearchHistory = async (req, res) => {
+  try {
+    const { id } = req.params
+    const userId = req.user._id
+    const data = await User.findByIdAndUpdate(userId, {
+      $pull: {
+        searchHistory: { id: Number(id) }
+      },
+
+    },
+      { new: true })
+    res.status(200).json({ message: "Remove Item Successfull" })
+  } catch (error) {
+    console.log("Error from removeItemFromSearchHistory", error.message);
+    res.status(500).json({ message: "Error server" });
+  }
+}
