@@ -1,9 +1,11 @@
-import React from 'react'
+import AuthScreen from "../components/AuthScreen";
+import HomeScreen from "../components/HomeScreen";
+import { useAuthStore } from "../store/useAuthStore";
 
 const HomePage = () => {
-    return (
-        <div className=''>HomePage</div>
-    )
-}
+  const { user } = useAuthStore();
+  console.log("check usser : ", user);
+  return <div>{user ? <HomeScreen /> : <AuthScreen />}</div>;
+};
 
-export default HomePage
+export default HomePage;

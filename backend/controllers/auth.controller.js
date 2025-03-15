@@ -8,7 +8,7 @@ export const signUp = async (req, res) => {
       return res.status(400).json("All fields are required");
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailRegex.test(email)) {
+    if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid Email" });
     }
     const checkUserName = await User.findOne({ username });
@@ -28,7 +28,13 @@ export const signUp = async (req, res) => {
     //hastpass
     const salt = await bcrypt.genSalt(10);
     const hashPass = await bcrypt.hash(password, salt);
-    const PROFILE_PICS = ["/avatar1.png", "/avatar2.png", "/avatar3.png"];
+    const PROFILE_PICS = [
+      "/avatar1.png",
+      "/avatar2.png",
+      "/avatar3.png",
+      "/avatar4.png",
+      "/avatar5.png",
+    ];
     const image = PROFILE_PICS[Math.floor(Math.random() * PROFILE_PICS.length)];
     const newUser = new User({
       username,
@@ -88,5 +94,14 @@ export const logout = async (req, res) => {
   } catch (error) {
     console.log("Error from logout", error.message);
     res.status(500).json({ message: "Error from server" });
+  }
+};
+
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json({ message: "Success", user: req.user });
+  } catch (error) {
+    console.log("Error form checkAuth", err.message);
+    res.status(500).json({ message: "Error Server" });
   }
 };

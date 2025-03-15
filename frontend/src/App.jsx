@@ -1,16 +1,44 @@
-import React from 'react'
-import { Routes, Route } from "react-router-dom"
-import HomePage from './pages/HomePage'
-import SignUpPage from './pages/SignUpPage'
-import LoginPage from './pages/LoginPage'
+import React, { useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
+import Footer from "./components/Footer";
+import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./store/useAuthStore";
+import { Loader } from "lucide-react";
 const App = () => {
+  const { user, checkAuth, isCheckAuth } = useAuthStore();
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+  if (isCheckAuth) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader size={50} className="animate-spin text-fuchsia-500" />
+      </div>
+    );
+  }
   return (
-    <Routes>
-      <Route path='/' element={<HomePage />} />
-      <Route path='/signup' element={<SignUpPage />} />
-      <Route path='/login' element={<LoginPage />} />
-    </Routes>
-  )
-}
+    <div>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/signup"
+          element={!user ? <SignUpPage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/login"
+          element={!user ? <LoginPage /> : <Navigate to={"/"} />}
+        />
+      </Routes>
+      <Footer />
 
-export default App
+      <div>
+        <Toaster />
+      </div>
+    </div>
+  );
+};
+
+export default App;
