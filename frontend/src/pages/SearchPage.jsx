@@ -3,9 +3,9 @@ import { useContentStore } from '../store/useContentStore';
 import Navbar from '../components/Navbar';
 import { Search } from 'lucide-react';
 import axiosInstance from '../libs/axios';
-import toast from 'react-hot-toast';
 import { ORIGINAL_IMG_TMDB } from "../utils/constants"
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const SearchPage = () => {
     const [activeTab, setActiveTab] = useState("movie");
@@ -24,7 +24,9 @@ const SearchPage = () => {
             setResults(res.data.content)
         } catch (error) {
             if (error.response.status === 404) {
-                return
+                toast.error("Nothing found, make sure you are searching under the right category");
+            } else {
+                toast.error("An error occurred, please try again later");
             }
         }
     }
@@ -32,12 +34,12 @@ const SearchPage = () => {
         e.preventDefault()
         getResult()
     }
-    useEffect(() => {
-        setContentType("")
-    }, [])
-    useEffect(() => {
-        getResult()
-    }, [activeTab])
+    // useEffect(() => {
+    //     setContentType("")
+    // }, [])
+    // useEffect(() => {
+    //     getResult()
+    // }, [activeTab])
 
     return (
         <div className='bg-black min-h-screen text-white'>
