@@ -92,12 +92,13 @@ export const getSearchHistory = async (req, res) => {
 };
 
 export const removeItemFromSearchHistory = async (req, res) => {
+  let { id } = req.params;
+  const idDone = parseInt(id);
   try {
-    const { id } = req.params
     const userId = req.user._id
     const data = await User.findByIdAndUpdate(userId, {
       $pull: {
-        searchHistory: { id: Number(id) }
+        searchHistory: { id: idDone }
       },
 
     },

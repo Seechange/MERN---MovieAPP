@@ -4,8 +4,9 @@ import { useAuthStore } from "../store/useAuthStore";
 
 const HomePage = () => {
   const { user } = useAuthStore();
-  console.log("check usser : ", user);
-  return <div>{user ? <HomeScreen /> : <AuthScreen />}</div>;
+  return <div>{user ? <HomeScreen /> : <AuthScreen />}
+
+  </div>;
 };
 
 export default HomePage;

@@ -4,9 +4,13 @@ import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import Footer from "./components/Footer";
+import WatchPage from "./pages/WatchPage"
+import SearchPage from "./pages/SearchPage"
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore";
 import { Loader } from "lucide-react";
+import HistoryPage from "./pages/HistoryPage";
+import NotFoundPage from "./pages/NotFoundPage";
 const App = () => {
   const { user, checkAuth, isCheckAuth } = useAuthStore();
   useEffect(() => {
@@ -30,6 +34,24 @@ const App = () => {
         <Route
           path="/login"
           element={!user ? <LoginPage /> : <Navigate to={"/"} />}
+        />
+
+        <Route
+          path="/watch/:id"
+          element={user ? <WatchPage /> : <Navigate to={"/login"} />}
+        />
+        <Route
+          path="/search"
+          element={user ? <SearchPage /> : <Navigate to={"/login"} />}
+        />
+        <Route
+          path="/history"
+          element={user ? <HistoryPage /> : <Navigate to={"/login"} />}
+        />
+
+        <Route
+          path="/*"
+          element={<NotFoundPage />}
         />
       </Routes>
       <Footer />

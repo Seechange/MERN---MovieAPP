@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Key, Mail, User, UserPlus2 } from "lucide-react";
 import { motion } from "motion/react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -9,10 +10,10 @@ const LoginPage = () => {
     password: "",
   });
   const [showPass, setShowPass] = useState("false");
-
+  const { login } = useAuthStore()
   const handleSubmib = (e) => {
     e.preventDefault();
-    console.log("Check form", formData);
+    login(formData)
   };
   return (
     <div className="h-screen w-full bia-bg">
@@ -61,7 +62,7 @@ const LoginPage = () => {
               </label>
               <div className="relative">
                 <input
-                  type={showPass ? "text" : "password"}
+                  type={showPass ? "password" : "text"}
                   placeholder="••••••••"
                   className="w-full border px-3 py-2 text-white mt-1 rounded-md bg-transparent
                                 focus:outline-none focus:ring "
